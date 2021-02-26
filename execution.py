@@ -4,56 +4,69 @@ import parser
 import variableEncoding as encode
 
 # Возвращает словарь вида <название переменной из файла, две фактические переменные>
-def initializationVariables(prs):
+def initializationVariables(prs, substr = ""):
     dictOfVar = {}
-    # Инициализируем входные переменные
-    inputVar = prs.varNames("input")
-    inV = bdd.exprvars("inV", len(inputVar) * 2)
-    i = 0
-    for varName in inputVar:
-        if varName not in dictOfVar:
-            dictOfVar[varName] = (inV[i], inV[i+1])
-            i += 2
-    # Инициализируем выходные переменные
-    outputVar = prs.varNames("output")
-    outV = bdd.exprvars("outV", len(outputVar) * 2)
-    i = 0
-    for varName in outputVar:
-        if varName not in dictOfVar:
-            dictOfVar[varName] = (outV[i], outV[i+1])
-            i += 2
-    # Инициализируем промежуточные переменные
-    wireVar = prs.varNames("wire")    
-    wireV = bdd.exprvars("wire", len(wireVar) * 2)
-    i = 0
-    for varName in wireVar:
-        if varName not in dictOfVar:
-            dictOfVar[varName] = (wireV[i], wireV[i+1])
-            i += 2
+    if (substr == ""):
+        # Инициализируем входные переменные
+        inputVar = prs.varNames("input")
+        inV = bdd.exprvars("inV", len(inputVar) * 2)
+        i = 0
+        for varName in inputVar:
+            if varName not in dictOfVar:
+                dictOfVar[varName] = (inV[i], inV[i+1])
+                i += 2
+        # Инициализируем выходные переменные
+        outputVar = prs.varNames("output")
+        outV = bdd.exprvars("outV", len(outputVar) * 2)
+        i = 0
+        for varName in outputVar:
+            if varName not in dictOfVar:
+                dictOfVar[varName] = (outV[i], outV[i+1])
+                i += 2
+        # Инициализируем промежуточные переменные
+        wireVar = prs.varNames("wire")    
+        wireV = bdd.exprvars("wire", len(wireVar) * 2)
+        i = 0
+        for varName in wireVar:
+            if varName not in dictOfVar:
+                dictOfVar[varName] = (wireV[i], wireV[i+1])
+                i += 2
+    else:
+        # Инициализируем входные переменные
+        inputVar = prs.varNames(substr)
+        inV = bdd.exprvars("inV", len(inputVar) * 2)
+        i = 0
+        for varName in inputVar:
+            if varName not in dictOfVar:
+                dictOfVar[varName] = (inV[i], inV[i+1])
+                i += 2
     return dictOfVar
-        
+
+
+# Выполнение кодирования (возвращает словарь со всеми переменными вида  
+# <название переменной из файла, две закодированные функции>)
 def Execution(path):
     prs = parser.Parser(path)
     dictOfVar = initializationVariables(prs)
     for expr in prs.parse():
         operation = expr.op
         if expr.left == "1b'1":
-            left = boolOne()
+            left = encode.boolOne()
         elif expr.left == "1b'0":
-            left = boolZero()
+            left = encode.boolZero()
         elif expr.left == "1b'x":
-            left = boolX()
+            left = encode.boolX()
         else:
             left = dictOfVar[expr.left]
         if (operation == "_HMUX"):
             dictOfVar[expr.res] = encode.boolMux(left, dictOfVar[expr.right], dictOfVar[expr.last])
         if (type(expr.right) == str):
             if expr.right == "1b'1":
-                right = boolOne()
+                right = encode.boolOne()
             elif expr.right == "1b'0":
-                right = boolZero()
+                right = encode.boolZero()
             elif expr.right == "1b'x":
-                right = boolX()
+                right = encode.boolX()
             else:
                 right = dictOfVar[expr.right]
             if operation == "and":

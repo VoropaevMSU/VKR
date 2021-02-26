@@ -4,16 +4,19 @@ import variableEncoding as encode
 import equivalentCheck as eqch
 import parser
 import variableEncoding as encode
+import execution
 import sys
             
 # Печать ответа 
 def printAnswerIntoFile(f, inV):
+    print(bdd.bdd2expr(f))
     file = open("output.txt", 'w')
-    if (f.satisfy_one() is None):
+    if (f.is_zero()):
         file.write("Equivalent")
     else:
         file.write("Not equivalent")
         for way in f.satisfy_all():
+            f.write(way)
             for var in way.keys():           
                 for key, value in inV.items():
                     if value[0] == var:
@@ -30,7 +33,7 @@ def printAnswerIntoFile(f, inV):
 def execute(path1, path2):
     g = eqch.EquivalentCheckFromFile(path1, path2)
     prs = parser.Parser(path1)
-    inv = prs.varNames("input")
+    inv = execution.initializationVariables(prs, "input")
     printAnswerIntoFile(g, inv)
 
 if len(sys.argv) > 2:

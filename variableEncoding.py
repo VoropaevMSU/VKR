@@ -1,3 +1,6 @@
+import pyeda.inter as bdd
+import pyeda
+
 # Кодировние операции "or" (4 входа и два выхода)
 def boolOr(x, y):
     f = x[0] & y[0] | x[0] & ~y[1] | ~x[1] & y[0]
