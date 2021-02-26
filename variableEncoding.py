@@ -58,18 +58,24 @@ def boolMux(x, y, z):
 # Кодирование константы 1
 def boolOne():
     f = bdd.expr("0")
+    f = bdd.expr2bdd(f)
     g = bdd.expr("1")
+    g = bdd.expr2bdd(g)
     return (f, g)
 
 # Кодирование константы 0
 def boolZero():
     f = bdd.expr("0")
+    f = bdd.expr2bdd(f)
     g = bdd.expr("0")
+    g = bdd.expr2bdd(g)
     return (f, g)
 
 # Кодирование константы x
 def boolX():
     f = bdd.expr("1")
+    f = bdd.expr2bdd(f)
     g = bdd.expr("0")
+    g = bdd.expr2bdd(g)
     return (f, g)
 
