@@ -51,8 +51,8 @@ def boolBuf(x):
 
 # Кодирование операции "boolMux" (6 входов и два выхода)
 def boolMux(x, y, z):
-    f = boolAnd(~z, x)[0] | boolAnd((~z[0],z[1]),y)[0] | z[0]
-    g = boolAnd(~z, x)[1] | boolAnd((~z[0],z[1]),y)[1] | ~z[0]
+    f = z[0] | z[1] & y[0] | ~z[1] & x[0]
+    g = ~z[0] & z[1] & y[1] | ~z[0] & ~z[1] & x[1]
     return(f, g)
 
 # Кодирование константы 1
